@@ -1,6 +1,5 @@
 # <img src="https://cdn.simpleicons.org/github/ffffff" width="30"/> Git From Scratch
 
-![Status](https://img.shields.io/badge/status-stable-blue?logo=git&logoColor=white)
 ![Status](https://img.shields.io/badge/status-active-brightgreen?logo=git&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
