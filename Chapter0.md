@@ -150,7 +150,7 @@ git config --global user.name "Your Name"
 git config --global user.email "your_email@example.com"
 ```
 
-The `--global` flag applies this identity to every repository on your machine. If you need a different identity for a specific project, run the same commands without the `--global` flag from within that repository. This configures a *local* `user.name` and `user.email` that overrides the global settings for that specific repo.
+The `--global` flag applies this identity to every repository on your machine. If you need a different identity for a specific project, run the same commands without the `--global` flag from within that repository. This configures a **local** `user.name` and `user.email` that overrides the global settings for that specific repo.
 
 As a best practice, ensure the email matches one registered to your GitHub account, as this links your commits to your profile. If it does not match, the commits will still be created, but GitHub will not attribute them to you.
 
