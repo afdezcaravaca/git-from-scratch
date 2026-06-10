@@ -1,7 +1,7 @@
 # 🐢 **<span style="text-decoration: double underline; color:rgba(10,130, 250)">Chapter 0: Git Configuration</span>**
 
 **Author:** Ángel F. Caravaca   
-**Date:** 01/05/2026
+**Date:** 01/06/2026
 
 ---
 
