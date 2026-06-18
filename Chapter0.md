@@ -197,7 +197,3 @@ export GPG_TTY=$(tty)
 From then on your commits will be signed, and you can confirm it by running `git log --show-signature` locally or by looking for the **Verified** label beside the commit on GitHub. 
 
 If you would rather not sign every commit, omit `commit.gpgsign` and instead add the `-S` flag to the ones you choose: `git commit -S -m "message"`.
-
-
-
-# hola
