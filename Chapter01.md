@@ -59,7 +59,8 @@ Some of the folders and files you'll find here are:
 ```
   <span style='color:rgba(210,110,50)'> **For example:** </span> for the object stored at `.git/objects/5c/1b14…`, the hash is `5c` + `1b14…`, so you run `git cat-file -t 5c1b14…`.
 
-
+>[!NOTE]
+When you commit with `git commit -m "<message>"`, Git immediately replies with a line like `[<branch> <short-hash>] <message>` — for example, `[main a3f9c21] Add objects section`. That `<short-hash>` is the first 7 characters of the new commit's full hash, and you can use it to refer to the commit in later commands (`git show a3f9c21`, `git reset a3f9c21`, and so on).
 
 - **`refs/`:** this folder contains text files with human-readable names. Each of these holds a commit hash, i.e., a unique code that identifies a commit.  
   
