@@ -135,5 +135,73 @@ To summarise this section, the following diagram shows how these three areas con
 <img src="./images/Areas.png" width=1000>
 </div>
 
+>[!Warning]
+Everything described in this section happens entirely on your local machine. The remote side, i.e., GitHub and the `push` that sends your commits there,has not been introduced yet, and belongs to a later chapter.
 
 ## 💊 **<span style='color:rgba(10,130,250)'><u> Read the status of your repo </u></span>**
+
+Since files silently move between these areas, you need a way to ask Git where everything currently stands. That is git status, and it is the command you will run more often than any other:
+
+```sh
+git status
+```
+In a repository with pending work, the output looks roughly like this:
+
+```sh
+On branch main # branch you are currently on
+
+Your branch is up to date with 'origin/main'. # how you stand vs the remote 
+
+Changes to be committed: # STAGING AREA: staged with 'git add', to be commited
+  (use "git restore --staged <file>..." to unstage)
+        modified:   Chapter01.md
+
+Changes not staged for commit: # the WORKING AREA: modified but not yet staged
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   README.md
+
+Untracked files: # files Git has never seen, not in the history, never staged
+  (use "git add <file>..." to include in what will be committed)
+        images/three-areas.png
+```
+
+Read it as a direct map of the three areas described above:
+
+- **Changes to be committed** is the staging area. Everything listed here will be part of your next commit, and nothing else will.
+
+- **Changes not staged for commit** is the working directory. Git already knows about these files, since they exist in the history, but the modifications you have just made have not been marked as ready.
+
+- **Untracked files** are files Git has never seen before. Basically, they are new files. They are in your directory but not under version control at all, and Git will keep ignoring them until you git add them for the first time.
+
+>[!Note]
+Notice as well that the output is not merely descriptive but instructional, as **each section tells you the command that undoes or advances it**. This is worth exploiting rather than memorising commands blindly.
+
+>[!TIP]
+Running `git status` before every `add` and every `commit` costs nothing and tells you exactly where your repository stands: which files are staged, which are only modified, and which are still untracked. This habit prevents from committing a file you did not mean to include, or missing one you did.
+
+For a compact view once you are comfortable with the concepts:
+```sh
+git status -s       # short format
+```
+Personally, I find this view useful only once you are comfortable with the long format, so I will just summarise it here:
+
+The short format uses two columns: the **left** column is the staging area, the **right** column is the working directory. The same letter means the same kind of change in either position — what changes is *where* it appears.
+
+| Output | Left (staging) | Right (working) | Meaning |
+| --- | --- | --- | --- |
+| `M ` | `M` | — | modified and **staged** |
+| ` M` | — | `M` | modified, **not staged** |
+| `MM` | `M` | `M` | staged, then modified again — the two versions differ |
+| `A ` | `A` | — | new file **staged** for the first time |
+| `AM` | `A` | `M` | staged as new, then modified again |
+| `D ` | `D` | — | deletion **staged** |
+| ` D` | — | `D` | deleted in the working directory, not staged |
+| `R ` | `R` | — | renamed, staged |
+| `C ` | `C` | — | copied, staged |
+| `??` | `?` | `?` | untracked — Git has never seen this file |
+| `UU` | `U` | `U` | merge conflict — both sides changed it |
+
+>[!NOTE]
+VSCode shows similar single-letter markers next to each filename in the explorer (`M`, `U`, `A`…), and colours them by state. It is the same idea, though it does not use the two-column layout.
+
