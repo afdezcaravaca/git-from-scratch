@@ -7,7 +7,7 @@
 
 In the previous chapter we configured and identity and a signature, both described as something that Git stamps onto your commits. However, we never explained what a commit actually is. Now that we have the credentials to "speak" with GitHub, and an identity that will be associated to you, let's move on to where the work lives, i.e., what Git records, and where it keeps it.
 
-## 📂 **<span style='color:rgba(10,130,250)'><u> What is a repository? </u></span>**
+## 🗄️ **<span style='color:rgba(10,130,250)'><u> What is a repository? </u></span>**
 
 A repository is just a directory in your tree that storages the special folder `.git`. There is nothing else to it. If that folder is present, the directory is a repository, whereas if you delete it, the directory instantly becomes an ordinary folder again, with your files untouched but their entire history gone.
 
@@ -29,7 +29,7 @@ Now, One point worth stressing is *how Git knows it is inside a repository*, and
 This is precisely why you shouldn't create a repository inside another: Git will treat the nested .git folder as ordinary content (or silently ignore it), leading to confusing, unpredictable behavior about which repository actually owns your files.
 
 
-## 🌿 **<span style='color:rgba(10,130,250)'><u> The .git folder </u></span>**
+## 🗂️ **<span style='color:rgba(10,130,250)'><u> The .git folder </u></span>**
 
 Now, let us look inside the `.git` folder that was just created. Just run:
 
@@ -52,22 +52,22 @@ Some of the folders and files you'll find here are:
 
   One last thing before moving on. If you open `.git/objects` you won't find files literally named `blob`, `tree` or `commit`. Git names every object by its 40-character hash, split into a 2-character folder and a 38-character filename (so the hash `5c1b14…` lives at `.git/objects/5c/1b14…`). Each of those files *is* one blob, tree or commit — just compressed, which is why you inspect them with `git cat-file` instead of opening them by hand. If you're curious, you can peek inside any object:
 
-```sh
-  git cat-file -t <folder><file>   # type: blob / tree / commit
-  git cat-file -p <folder><file>   # pretty-print of the content
-  git cat-file -s <folder><file>   # size in bytes
-```
+    ```sh
+    git cat-file -t <folder><file>   # type: blob / tree / commit
+    git cat-file -p <folder><file>   # pretty-print of the content
+    git cat-file -s <folder><file>   # size in bytes
+    ```
   <span style='color:rgba(210,110,50)'> **For example:** </span> for the object stored at `.git/objects/5c/1b14…`, the hash is `5c` + `1b14…`, so you run `git cat-file -t 5c1b14…`.
 
 >[!NOTE]
-When you commit with `git commit -m "<message>"`, Git immediately replies with a line like `[<branch> <short-hash>] <message>` — for example, `[main a3f9c21] Add objects section`. That `<short-hash>` is the first 7 characters of the new commit's full hash, and you can use it to refer to the commit in later commands (`git show a3f9c21`, `git reset a3f9c21`, and so on).
+When you commit with `git commit -m "<message>"`, Git immediately replies with a line like `[<branch> <short-hash>] <message>`. For instance, `[main a3f9c21] Add objects section`. That `<short-hash>` is the first 7 characters of the new commit's full hash, and you can use it to refer to the commit in later commands (`git show a3f9c21`, `git reset a3f9c21`, and so on).
 
 - **`refs/`:** this folder contains text files with human-readable names. Each of these holds a commit hash, i.e., a unique code that identifies a commit.  
   
     <span style='color:rgba(210,110,50)'> **For example:** </span> the typical case is a branch file, such as `refs/heads/main`, whose content is the hash of the most recent commit on that branch. That hash is the identifier of a commit living in `objects/`. Notice that the ref doesn't hold the commit itself (what you did), only the pointer to it. Moreover, when you make a new commit, Git rewrites the file so it points to the new commit, and the branch moves forward on its own.  
     It works like the contacts app on your phone: the entry "Mom" (the file) holds a phone number (the hash), nothing more. If your "Mom" changes her number, you must rewrite it — that rewrite is what a new commit does to the branch.
  
-Branches aren't the only kind of ref, though. The folder is organised into three subfolders (these are examples):
+    Branches aren't the only kind of ref, though. The folder is organised into three subfolders (these are examples):
 
 | File in `refs/` | Contains | What the name means | What updates it |
 | --- | --- | --- | --- |
@@ -109,3 +109,31 @@ Please do not take the previous paragraph as a security rule. The `info/exclude`
 - **`ORIG_HEAD`:** a companion to the reflog. Before certain operations that can rewrite history quite drastically (`reset`, `merge`, `rebase`), Git saves your previous position here, so that `git reset --hard ORIG_HEAD` gives you a one-step way back if the operation goes wrong.
 
 The rest (`branches/`, `description`, `COMMIT_EDITMSG`, `FETCH_HEAD`, `packed-refs`, etc.) is machinery that Git manages on its own. Some of them, like `branches/`, are leftover from older workflows nobody uses now. Unlike the files above, there is no point in this course where you will need to open or reason about them; they appear and update automatically based on the operations you execute.
+
+## 🚥 **<span style='color:rgba(10,130,250)'><u> The three areas of git </u></span>**
+
+Now that we know what a repository is, the next natural question is *how a change travels from the editor to the history*. Git does not take you from one to the other in a single step, as it adds an intermediate area between them, so your files pass through three areas in total before a change is recorded. Understanding why this middle area exists is worth the effort, since it shapes how you compose every commit from here on.
+
+The three areas of git are:
+
+1. **The *working* area:** your project directory as it exists on disk or, to keep it simple, what your editor opens and saves. This is the only area you manipulate directly, as this is the place where you write, break and fix your code. Right now, as I write this file, its latest content exists only in the working area.
+   
+2. **The *staging* area (or *index*):** the draft of your next commit. When you mark a change as ready with `git add <file>`, Git copies the file's content *as it stands at that instant* into this area and holds it there. Nothing is permanent yet, since you can add to it, remove from it or rebuild it as many times as you want, until the draft matches exactly what you intend to record.
+   
+3. **The *repository* (history):** the sequence of commits stored inside `.git/objects`. Content lands here when you run `git commit`, and once it does it is permanent, immutable and safe to share. 
+
+>[!Important]
+Any work living in the working or staging area can be lost for good. However, once it reaches the repository, it can be recovered. Keep this in mind before applying any drastic change to your files.
+
+The reason this *staging* area exists is that **what you have changed and what you want to record are rarely the same thing**. During a single session you often touch many unrelated things, as you may fix a bug, correct a few typos in the documentation, and leave a new function half-written in a third file. Committing all of that at once produces a commit that cannot be described in one sentence, and therefore cannot be understood, reviewed or reverted as a unit.
+
+The staging area is what lets you avoid that. Instead of recording everything you happened to change, you compose each commit deliberately: first, you stage the bug fix alone and commit it, then stage the documentation and commit that separately, all while the unfinished debugging code stays untouched in your working directory. The result is a history that reflects the logic of the project rather than the chronology of your afternoon, yielding something easy to read, and easy to revert one change without dragging the others along.
+
+To summarise this section, the following diagram shows how these three areas connect and how your content moves through them:
+
+<div align='center'>
+<img src="./images/Areas.png" width=1000>
+</div>
+
+
+## 💊 **<span style='color:rgba(10,130,250)'><u> Read the status of your repo </u></span>**
