@@ -14,16 +14,16 @@ The content was developed with the assistance of Claude (Anthropic's AI), which 
 
 | Chapter | Topics |
 | ------- | ------ |
-| [**Chapter 0: Git Configuration**](./Chapters/0-Git-Configuration.md) | Git vs GitHub · authentication (SSH/HTTPS) and identification · commit signing (GPG) |
-| [**Chapter 1: The Repository and the Commit**](./Chapters/1-The-Repository-and-the-Commit.md) | `init` · the three areas (working directory / staging / history) · `add`, `commit`, `status` · a commit as a snapshot |
-| [**Chapter 2: Navigating History and Undoing Changes**](./Chapters/2-Navigating-History-and-Undoing-Changes.md) | `log`, `diff`, `show` · HEAD as a pointer · `restore`, `reset`, `revert` · `.gitignore` |
-| [**Chapter 3: Branches**](./Chapters/3-Branches.md) | a branch as a movable pointer · `branch`, `switch` · why branches are cheap |
-| [**Chapter 4: Integrating Branches: Merge**](./Chapters/4-Integrating-Branches-Merge.md) | fast-forward vs merge commit · the commit graph (DAG) |
-| [**Chapter 5: Conflicts**](./Chapters/5-Conflicts.md) | why conflicts happen · anatomy of conflict markers · resolving them |
-| [**Chapter 6: Remotes: The Bridge to the Cloud**](./Chapters/6-Remotes-The-Bridge-to-the-Cloud.md) | `clone`, `remote` · `fetch` vs `pull` · `push` · tracking branches (`origin/main`) |
-| [**Chapter 7: Collaboration and Pull Requests**](./Chapters/7-Collaboration-and-Pull-Requests.md) | fork · pull requests · review · the GitHub Flow |
-| [**Chapter 8: Rebase and Rewriting History**](./Chapters/8-Rebase-and-Rewriting-History.md) | `rebase` vs `merge` · interactive rebase · when NOT to rewrite history |
-| [**Chapter 9: Workflows and Tags**](./Chapters/9-Workflows-and-Tags.md) | Git Flow vs trunk-based · `tag` and releases |
+| [**Chapter 0: Git Configuration**](./Chapters/00-Git-Configuration.md) | Git vs GitHub · authentication (SSH/HTTPS) and identification · commit signing (GPG) |
+| [**Chapter 1: The Repository and the Commit**](./Chapters/01-The-Repository-and-the-Commit.md) | `init` · the three areas (working directory / staging / history) · `add`, `commit`, `status` · a commit as a snapshot |
+| [**Chapter 2: Navigating History and Undoing Changes**](./Chapters/02-Navigating-History-and-Undoing-Changes.md) | `log`, `diff`, `show` · HEAD as a pointer · `restore`, `reset`, `revert` · `.gitignore` |
+| [**Chapter 3: Branches**](./Chapters/03-Branches.md) | a branch as a movable pointer · `branch`, `switch` · why branches are cheap |
+| [**Chapter 4: Integrating Branches: Merge**](./Chapters/04-Integrating-Branches-Merge.md) | fast-forward vs merge commit · the commit graph (DAG) |
+| [**Chapter 5: Conflicts**](./Chapters/05-Conflicts.md) | why conflicts happen · anatomy of conflict markers · resolving them |
+| [**Chapter 6: Remotes: The Bridge to the Cloud**](./Chapters/06-Remotes-The-Bridge-to-the-Cloud.md) | `clone`, `remote` · `fetch` vs `pull` · `push` · tracking branches (`origin/main`) |
+| [**Chapter 7: Collaboration and Pull Requests**](./Chapters/07-Collaboration-and-Pull-Requests.md) | fork · pull requests · review · the GitHub Flow |
+| [**Chapter 8: Rebase and Rewriting History**](./Chapters/08-Rebase-and-Rewriting-History.md) | `rebase` vs `merge` · interactive rebase · when NOT to rewrite history |
+| [**Chapter 9: Workflows and Tags**](./Chapters/09-Workflows-and-Tags.md) | Git Flow vs trunk-based · `tag` and releases |
 | [**Chapter 10: Useful VSCode Extensions**](./Chapters/10-Useful-VSCode-Extensions.md) | practical extensions for day-to-day Git work |
 
 ---
