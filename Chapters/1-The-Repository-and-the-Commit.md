@@ -132,7 +132,7 @@ The staging area is what lets you avoid that. Instead of recording everything yo
 To summarise this section, the following diagram shows how these three areas connect and how your content moves through them:
 
 <div align='center'>
-<img src="./images/Areas.png" width=1000>
+<img src="../images/Areas.png" width=1000>
 </div>
 
 >[!Warning]
@@ -188,6 +188,8 @@ Personally, I find this view useful only once you are comfortable with the long 
 
 The short format uses two columns: the **left** column is the staging area, the **right** column is the working directory. The same letter means the same kind of change in either position — what changes is *where* it appears.
 
+<div align="center">
+
 | Output | Left (staging) | Right (working) | Meaning |
 | --- | --- | --- | --- |
 | `M ` | `M` | — | modified and **staged** |
@@ -201,6 +203,7 @@ The short format uses two columns: the **left** column is the staging area, the 
 | `C ` | `C` | — | copied, staged |
 | `??` | `?` | `?` | untracked — Git has never seen this file |
 | `UU` | `U` | `U` | merge conflict — both sides changed it |
+</div>
 
 >[!NOTE]
 VSCode shows similar single-letter markers next to each filename in the explorer (`M`, `U`, `A`…), and colours them by state. It is the same idea, though it does not use the two-column layout.

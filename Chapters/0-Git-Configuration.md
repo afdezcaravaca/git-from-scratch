@@ -83,7 +83,7 @@ Avoid a practice you will often see online: embedding the token directly in the 
 To summarise the procedure:
 
 <div align="center">
-<img src="./images/FlowchartHTTPS.png" width=1000>
+<img src="../images/FlowchartHTTPS.png" width=1000>
 </div>
 
 ### SSH
@@ -123,7 +123,7 @@ Hi <usernamer>! You've successfully authenticated, but GitHub does not provide s
 To summarise the procedure:
 
 <div align='center'>
-<img src="./images/FlowchartSSH.png" width=1000>
+<img src="../images/FlowchartSSH.png" width=1000>
 </div>
 
 > [!NOTE]
