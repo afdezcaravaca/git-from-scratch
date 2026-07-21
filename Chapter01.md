@@ -138,7 +138,7 @@ To summarise this section, the following diagram shows how these three areas con
 >[!Warning]
 Everything described in this section happens entirely on your local machine. The remote side, i.e., GitHub and the `push` that sends your commits there,has not been introduced yet, and belongs to a later chapter.
 
-## 💊 **<span style='color:rgba(10,130,250)'><u> Read the status of your repo </u></span>**
+## 🔎 **<span style='color:rgba(10,130,250)'><u> Read the status of your repo </u></span>**
 
 Since files silently move between these areas, you need a way to ask Git where everything currently stands. That is git status, and it is the command you will run more often than any other:
 
@@ -204,4 +204,103 @@ The short format uses two columns: the **left** column is the staging area, the 
 
 >[!NOTE]
 VSCode shows similar single-letter markers next to each filename in the explorer (`M`, `U`, `A`…), and colours them by state. It is the same idea, though it does not use the two-column layout.
+
+## ⚖️​ **<span style='color:rgba(10,130,250)'><u> Add vs Commit</u></span>**
+
+With the model in place, the two commands become unambiguous: `git add` selects, whereas `git commit` records.
+
+### `git add`
+
+This command copies the current content of a file into the staging area. There are different ways of using this command:
+
+```bash
+git add <file>                # a single file
+git add <folder>               # every file inside a directory
+git add .                     # everything in the current directory and below
+git add -p                    # interactively, block by block within a file
+```
+Three points deserve attention here.
+
+First, `git add` is also what starts tracking a file. For an **untracked file** the command means *"begin versioning this"*, and for an **already tracked one** it means *"include these modifications in the next commit"*. It is the same command doing what is conceptually the same job: this content should be part of the next snapshot.
+
+Second, `git add` captures the content at the instant you run it, not a live reference to the file. If you stage a file and then keep editing it, the staging area still holds the earlier version, which is exactly what the MM status above was telling you. Running git add again overwrites the staged copy with the newer content, you don't need to `git restore --stage` the previous add.
+
+Third, git add . is convenient and, for that reason, the usual source of accidental commits: configuration files, notes, large binaries. The habit that avoids this is not to stop using it, but to run git status immediately afterwards and read what you actually staged. The -p variant is the opposite extreme and genuinely useful when a single file contains two unrelated changes, since it walks you through the file fragment by fragment and asks whether each one should be staged.
+
+### `git commit`
+
+This command takes whatever is in the staging area and writes it permanently into the repository:
+
+```bash
+git commit -m "New section: Add vs Commit"
+```
+
+The `-m` flag supplies the message inline. Without it Git opens your configured editor, which is the better option whenever the change deserves more than one line. 
+
+The message is not just decoration, as it will help you understand the history of your repository. Therefore, lose time writing descriptible messages. Two convenctions worth knowing:
+
+- Write the subject line in the imperative mood, describing what the commit does to the codebase. 
+  
+- Explain the *why* in the body, not the *what*. Explain what motivates the change.
+
+The example below shows the best practice. In particular, you'll use this when co-working. When you work by yourself, you may lean towards the shorter version with just `-m`, but even then, try to keep your subject descriptive.
+
+```bash
+# no -m, so Git opens your editor
+git commit
+
+#####################################
+Add the "Add vs Commit" section   # subject: imperative, sentence case
+                                  # blank line separates subject from body
+Readers need to know the differences   # body: the why
+between staging and committing.          
+```
+
+> [!NOTE]
+A commit is local. Nothing has been sent anywhere, and `git commit` does not contact GitHub in any way, so it works perfectly with no internet connection at all. Publishing the commits is the job of `git push`, which will be discussed when we introduce remotes.
+
+## 📸 **<span style='color:rgba(10,130,250)'><u> What is a commit? </u></span>**
+
+We can now answer the question the chapter opened with. A commit is a **complete snapshot of your project at a moment in time**, together with the metadata that explains its origin.
+
+It is tempting to picture a commit as a set of differences applied on top of the previous one, since that is how `git diff` and `git log -p` present it.However, Git does the opposite: **each commit stores the full state of the tree**, not the changes leading to it. The diffs you see on screen are computed on demand by comparing two snapshots, and are not what is stored on disk.
+
+Concretely, every commit object contains:
+
+- A reference to the complete tree of files as it stood at that instant.
+- The identifier of its **parent** commit, i.e., the state that immediately preceded it.
+- The **author** and the **committer**, each with a name, an email and a timestamp. These are precisely the values you configured in Chapter 0.
+- The **message** you wrote.
+- The **GPG signature**, when the commit is signed.
+
+Hash all of that together and you obtain the commit's identity, displayed when you run `git log`:
+
+```bash
+commit <hash - identifier>
+Author: user.name <user.email>
+Date:   full date
+
+    commit message
+```
+That identifier is not a sequential number assigned by Git. It is a cryptographic hash **derived from the content itself**. this yields three consequences that explain much of Git's behaviour:
+
+1. **Commits are immutable.** Changing anything at all, i.e., a single character of the message, one byte of a file or the timestamp, produces a different hash, and therefore a different commit. 
+   
+2. **The history is a chain, and tamper-evident.** Since each commit records its parent's hash, and its own hash is computed over that reference, altering the parent hash forces Git to rewrite all the child hashes. Therefore, you cannot modify the past unnoticed.
+   
+3. **Identical content produces identical objects.** Storing complete snapshots sounds wasteful, but a file that has not changed between two commits is not stored twice. Both trees simply point at the same object, since the content, and therefore the hash, is the same. Only what actually changed occupies new space.
+
+One last practical note. A commit records the state of the tree, so it also records the *absence* of a file: deleting a file and committing produces a snapshot in which the file does not appear, while it remains perfectly recoverable from every earlier commit. Nothing is ever lost as long as it was committed at least once, and that guarantee is what makes it safe to experiment. This is also the reason for the habit worth adopting from now on: **commit early and often**. A commit is cheap, entirely local, and is the only thing that turns work into something Git can restore.
+
+## 🧭 **<span style='color:rgba(10,130,250)'><u> Summary </u></span>**
+
+| Command | What it does |
+| ------- | ------------ |
+| `git init` | Creates the `.git` folder, turning the directory into a repository |
+| `git status` | Shows where each file stands across the three areas |
+| `git status -s` | The same, in a compact two-column format |
+| `git add <file>` | Copies the current content of a file into the staging area |
+| `git add -p` | Stages changes selectively, fragment by fragment |
+| `git commit -m "..."` | Writes the staging area into the history as a new commit |
+
 
