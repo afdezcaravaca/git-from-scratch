@@ -50,15 +50,6 @@ git log -- <file>                # commits that touched this file only
 git log --grep="fix"             # commits whose message matches this string
 ```
 
->[!TIP]
-> When you run `git log` or `git diff`, keep in mind that:
-> - Press `q` to exit.
-> - Press `Space` to move one page.
-> - Press `b` to return one page.
-> - `↑` / `↓` to advance one line.
-> - `g` / `G` to go to the beginning or the end.
-> - `/text` to search a specific word or text. In this option, press `n` / `N` to move to the next or the previous match. (`/New function`)
-
 ## 🕵 **<span style='color:rgba(10,130,250)'><u> Comparing two states </u></span>**
 
 Where `git log` tells you *what you did*, `git diff` tells you *what you changed*, expressed as additions and deletions of lines. 
@@ -101,6 +92,14 @@ git diff <branch1> <branch2>   # between the last commits of two branches
 
 To find the hashes you need here, run `git log`, as it is the command that tells you *what you did*, and the short hash printed by `git log --oneline` is enough to identify a commit.
 
+>[!TIP]
+> When you run `git log` or `git diff`, keep in mind that:
+> - Press `q` to exit.
+> - Press `Space` to move one page.
+> - Press `b` to return one page.
+> - `↑` / `↓` to advance one line.
+> - `g` / `G` to go to the beginning or the end.
+> - `/text` to search a specific word or text. In this option, press `n` / `N` to move to the next or the previous match. (`/New function`)
 
 ## 🫆 **<span style='color:rgba(10,130,250)'><u> Inspecting a single commit </u></span>**
 
@@ -143,4 +142,73 @@ As mentioned earlier, you can also control how far back you go from `HEAD`, i.e.
 | `HEAD~1` (or `HEAD^`) | the parent of the current commit |
 | `HEAD~2` | the grandparent — two steps back |
 | `HEAD~n` | *n* steps back, following the first parent each time |
+| | |
 </div>
+
+Next image provides an intuitive scheme of what `git restore` does. In particular:
+
+- `git restore <file>`: in the scheme this is represented with the folder. Notice that it appears blue in the last commit but yellow in the working area, meaning you have modified it since you committed. If you run `git restore <folder>`, it goes back to being blue, i.e. to the state Git had recorded for it. I focus on the folder just for comprehension, but keep in mind that `git restore` only touches the paths you give it: running it on a single file leaves everything else in the working area exactly as it is. How you may feel it is as if you returned to the last commit, undoing every change you made to that file.
+
+- `git restore --staged`: in the scheme this is represented with the excel file. Notice that the excel sits in the staging area with a red cross. This is what you get once you run `git restore --staged <excel>`: the excel, which was staged and ready to be committed, stops being there. Note that the file itself is untouched in your working area. The only thing you undo is the `git add`.
+
+>[!NOTE]
+> I hope these graphs clarify the concepts rather than confuse them. I came up with them by myself, so please feel free to provide a better representation.
+
+<div align='center'>
+<img src='../images/GitRestore.png' width=1000>
+</div>
+
+## ↩️ **<span style='color:rgba(10,130,250)'><u> Undoing changes: restore, reset, and revert </u></span>**
+
+Git offers three distinct commands to undo something, and the reason there are three, rather than one, is that *undo* can mean different things depending on where the change lives and whether it has already been shared with others. Confusing them is the most common way to lose work by accident, so the goal of this section is to make the boundaries between them unambiguous.
+
+The question to ask yourself before typing any of these commands is always: **which area am I trying to undo, and has this been pushed already?**
+
+### `git restore`: undoing in the working directory or staging area
+
+This is the narrowest and safest of the three, and it operates *before* history is involved at all, i.e., only on the working directory and the staging area.
+
+<div align='center'>
+
+| Command | Effect | Intuition |
+| --- | --- | --- |
+|`git restore <file>` | Discard changes in the working directory, back to the last commit. | It's like undoing all the changes with `ctrl + z` but faster |
+| `git restore --stage <file>` | Unstage a file keeping the edits in the working directory | It just undo the `git add <file>` |
+| | | |
+</div>
+
+One important thing to keep in mind is that `git restore <file>` is destructive on the working directory, since the edits you made are overwritten with the version from the last commit, with no further confirmation. In contrast, `git restore --staged`, is harmless as it only moves the file back from the staging area to the working directory, so your edits are not touched at all, only *unmarked* as ready to commit.
+
+
+### `git reset`: moving the branch pointer
+
+`git reset` operates one level up: it moves what the current branch points to, which is to say, it rewrites which commit `HEAD` (and therefore your branch) considers "the latest one". Everything after the target commit is left behind, unreachable from the branch, though not necessarily deleted yet.
+
+To make it simpler, you travel back in time to a previous commit, and your branch travels with you. Everything you did between that commit and where you were is left behind: not erased, just forgotten by the branch, which no longer counts those commits as part of its history. From there you carry on working, and your next commits grow from that point instead, opening the line named *New timeline* in the diagram.
+
+Next image provides an intuitive scheme of what `git reset` does. In particular:
+
+You created the repository and started making changes and committing them. That's the whole horizontal line. At some point, you decided to undo a lot of work by returning to the fourth commit. From there your branch carries on, opening the new timeline drawn in red. Notice that all the commits between the point you were at and the commit you returned to are "forgotten": they are not erased, but your branch no longer counts them as part of its history. This is represented by the gray and dotted line.
+
+>[!NOTE]
+> I hope these graphs clarify the concepts rather than confuse them. I came up with
+> them by myself, so please feel free to provide a better representation.
+
+<div align="center">
+
+<img src="../images/GitReset.png" width=1000>
+
+</div>
+
+Like every command presented so far, `git reset` accepts flags. Here they are not merely cosmetic, since the command takes a target commit and a *mode* that decides which of the three areas are dragged back along with the branch. The branch pointer always moves; what changes is whether the staging area and the working directory are rewritten to match.
+
+<div align="center">
+
+| Mode | Branch pointer | Staging area | Working directory |
+| --- | --- | --- | --- |
+| `git reset --soft` | moved | unchanged (keeps old staged state) | unchanged |
+| `git reset (--mixed)` | moved | reset to match `<commit>` | unchanged. It's the default mode. |
+| `git reset --hard` | moved | reset to match `<commit>` | reset to match `<commit>` |
+| | | | |
+</div>
+
