@@ -120,3 +120,27 @@ git show HEAD::path/to/file    # the file as it was in your last commit
 ```
 
 <span style='color:rgba(210,110,50)'> **For example:** </span> if you want to check what `README.md` looked like ten commits ago, you do not need to move anywhere: `git show HEAD~10:README.md` prints it straight to the terminal, leaving your working directory exactly as it is.
+
+
+## 📌 **<span style='color:rgba(10,130,250)'><u> HEAD: your position in the history </u></span>**
+
+In Chapter 1, we introduced `HEAD` as a file that tells Git which branch you are on. It is worth expanding on that definition now, because it has already appeared in previous commands, and the ones that follow are defined entirely in terms of it.
+
+Actually, `HEAD` is a pointer to a branch that points to the last commit in that branch. You could say *a pointer to a pointer*. In short, `HEAD` contains a path to a file in `refs/heads/`, which is your current *branch*. Inside that branch file there is a hash that is related to a file in `objects/`, i.e. the last commit in that branch.
+
+Understanding this is quite useful, as it gives you an intuition of how the previous commands work. The image below shows how Git resolves `HEAD` when you invoke it in the `git diff HEAD` command.
+
+<div align='center'>
+<img src="../images/Head.png" width=500>
+</div>
+
+As mentioned earlier, you can also control how far back you go from `HEAD`, i.e., how many commits you want to travel back in time:
+<div align='center'>
+
+| Reference | Means |
+| --- | --- |
+| `HEAD` | the current commit |
+| `HEAD~1` (or `HEAD^`) | the parent of the current commit |
+| `HEAD~2` | the grandparent — two steps back |
+| `HEAD~n` | *n* steps back, following the first parent each time |
+</div>
