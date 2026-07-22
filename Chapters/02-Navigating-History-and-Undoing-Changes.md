@@ -51,10 +51,72 @@ git log --grep="fix"             # commits whose message matches this string
 ```
 
 >[!TIP]
-> When you run `git log`, keep in mind that:
+> When you run `git log` or `git diff`, keep in mind that:
 > - Press `q` to exit.
 > - Press `Space` to move one page.
 > - Press `b` to return one page.
 > - `↑` / `↓` to advance one line.
 > - `g` / `G` to go to the beginning or the end.
 > - `/text` to search a specific word or text. In this option, press `n` / `N` to move to the next or the previous match. (`/New function`)
+
+## 🕵 **<span style='color:rgba(10,130,250)'><u> Comparing two states </u></span>**
+
+Where `git log` tells you *what you did*, `git diff` tells you *what you changed*, expressed as additions and deletions of lines. 
+
+To understand how to use this command, recall the three areas from Chapter 1: working directory, staging area, and repository. The command `git diff` always compares two of them, and which two depends on the flags you give it:
+
+| Command | Compares | Intuition |
+| --- | --- | --- |
+| `git diff` | Working area vs staging area | What you have edited but not staged yet |
+| `git diff --staged` | Staging area vs `HEAD` | What you are about to commit, compared to your last commit in the current branch  |
+| `git diff HEAD` | Working area vs `HEAD` | Everything you have changed since your last commit in the current branch, staged or not |
+
+>[!IMPORTANT]
+This is the one of the most common source of confusion for beginners: plain `git diff` does **not** show you what has changed since your last commit, it shows you what is *unstaged*. If you have already staged everything with `git add`, plain `git diff` prints nothing, even though your working directory clearly differs from the last.
+
+Three things to keep in mind while running this command under any of its variants:
+
+- **File header:** each file in the diff opens with the two versions being compared. Both paths are usually identical, since it is the same file at two moments in time.
+
+```diff
+--- a/File   # the old version
++++ b/File   # the new version
+```
+- **Line prefixes:** every line carries a one-character prefix telling you what happened to it. They are also colored to ease the comprehension. Moreover, note that there is no prefix for *modified*, since editing a line is recorded as a removal followed by an addition.
+```diff
++> this line was added
+-> this line was removed
+>   this line is unchanged context, shown only to orient you
+```
+
+- **Block header:** each block of changes starts with a line such as `@@ -7,3 +7,4 @@`. Read it as coordinates: the block covers 3 lines starting at line 7 of the old version, and 4 lines starting at line 7 of the new one.
+
+Once you are comfortable using `git diff` to compare your current work, it is worth knowing that the command is far more powerful than that. Any two points in the history can be compared, not just the three areas: two arbitrary commits, a commit against your working directory, or the tips of two branches.
+
+```sh
+git diff <hash1> <hash2>       # between two specific commits
+git diff HEAD~2 HEAD           # between two commits ago and now (see HEAD~n below)
+git diff <branch1> <branch2>   # between the last commits of two branches
+```
+
+To find the hashes you need here, run `git log`, as it is the command that tells you *what you did*, and the short hash printed by `git log --oneline` is enough to identify a commit.
+
+
+## 🫆 **<span style='color:rgba(10,130,250)'><u> Inspecting a single commit </u></span>**
+
+While `git diff` compares two points, `git show` looks at a single one. It prints the metadata of a commit followed by the diff it introduced against its parent, so it behaves like a "combination" of `git log` and `git diff`. It also accepts the formatting flags of both:
+
+```sh
+git show                  # the commit HEAD points to, i.e. your last one
+git show <hash>           # a specific commit: metadata + the diff it introduced
+git show <hash> --stat    # the same, but only which files changed and by how much
+```
+
+In particular, I would like to mention a second use of this command, which is where it becomes genuinely handy. You can ask for the content of a single file *as it existed in that commit*:
+
+```sh
+git show <hash>:path/to/file   # the file as it was in that commit
+git show HEAD::path/to/file    # the file as it was in your last commit
+```
+
+<span style='color:rgba(210,110,50)'> **For example:** </span> if you want to check what `README.md` looked like ten commits ago, you do not need to move anywhere: `git show HEAD~10:README.md` prints it straight to the terminal, leaving your working directory exactly as it is.
