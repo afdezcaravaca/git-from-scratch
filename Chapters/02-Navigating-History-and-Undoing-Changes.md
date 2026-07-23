@@ -151,12 +151,12 @@ Next image provides an intuitive scheme of what `git restore` does. In particula
 
 - `git restore --staged`: in the scheme this is represented with the excel file. Notice that the excel sits in the staging area with a red cross. This is what you get once you run `git restore --staged <excel>`: the excel, which was staged and ready to be committed, stops being there. Note that the file itself is untouched in your working area. The only thing you undo is the `git add`.
 
->[!NOTE]
-> I hope these graphs clarify the concepts rather than confuse them. I came up with them by myself, so please feel free to provide a better representation.
-
 <div align='center'>
 <img src='../images/GitRestore.png' width=1000>
 </div>
+
+>[!NOTE]
+> I hope these graphs clarify the concepts rather than confuse them. I came up with them by myself, so please feel free to provide a better representation.
 
 ## ↩️ **<span style='color:rgba(10,130,250)'><u> Undoing changes: restore, reset, and revert </u></span>**
 
@@ -190,15 +190,16 @@ Next image provides an intuitive scheme of what `git reset` does. In particular:
 
 You created the repository and started making changes and committing them. That's the whole horizontal line. At some point, you decided to undo a lot of work by returning to the fourth commit. From there your branch carries on, opening the new timeline drawn in red. Notice that all the commits between the point you were at and the commit you returned to are "forgotten": they are not erased, but your branch no longer counts them as part of its history. This is represented by the gray and dotted line.
 
->[!NOTE]
-> I hope these graphs clarify the concepts rather than confuse them. I came up with
-> them by myself, so please feel free to provide a better representation.
-
 <div align="center">
 
 <img src="../images/GitReset.png" width=1000>
 
 </div>
+
+>[!NOTE]
+> I hope these graphs clarify the concepts rather than confuse them. I came up with
+> them by myself, so please feel free to provide a better representation.
+
 
 Like every command presented so far, `git reset` accepts flags. Here they are not merely cosmetic, since the command takes a target commit and a *mode* that decides which of the three areas are dragged back along with the branch. The branch pointer always moves; what changes is whether the staging area and the working directory are rewritten to match.
 
