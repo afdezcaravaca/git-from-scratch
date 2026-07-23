@@ -145,19 +145,6 @@ As mentioned earlier, you can also control how far back you go from `HEAD`, i.e.
 | | |
 </div>
 
-Next image provides an intuitive scheme of what `git restore` does. In particular:
-
-- `git restore <file>`: in the scheme this is represented with the folder. Notice that it appears blue in the last commit but yellow in the working area, meaning you have modified it since you committed. If you run `git restore <folder>`, it goes back to being blue, i.e. to the state Git had recorded for it. I focus on the folder just for comprehension, but keep in mind that `git restore` only touches the paths you give it: running it on a single file leaves everything else in the working area exactly as it is. How you may feel it is as if you returned to the last commit, undoing every change you made to that file.
-
-- `git restore --staged`: in the scheme this is represented with the excel file. Notice that the excel sits in the staging area with a red cross. This is what you get once you run `git restore --staged <excel>`: the excel, which was staged and ready to be committed, stops being there. Note that the file itself is untouched in your working area. The only thing you undo is the `git add`.
-
-<div align='center'>
-<img src='../images/GitRestore.png' width=1000>
-</div>
-
->[!NOTE]
-> I hope these graphs clarify the concepts rather than confuse them. I came up with them by myself, so please feel free to provide a better representation.
-
 ## ↩️ **<span style='color:rgba(10,130,250)'><u> Undoing changes: restore, reset, and revert </u></span>**
 
 Git offers three distinct commands to undo something, and the reason there are three, rather than one, is that *undo* can mean different things depending on where the change lives and whether it has already been shared with others. Confusing them is the most common way to lose work by accident, so the goal of this section is to make the boundaries between them unambiguous.
@@ -179,6 +166,18 @@ This is the narrowest and safest of the three, and it operates *before* history 
 
 One important thing to keep in mind is that `git restore <file>` is destructive on the working directory, since the edits you made are overwritten with the version from the last commit, with no further confirmation. In contrast, `git restore --staged`, is harmless as it only moves the file back from the staging area to the working directory, so your edits are not touched at all, only *unmarked* as ready to commit.
 
+Next image provides an intuitive scheme of what `git restore` does. In particular:
+
+- `git restore <file>`: in the scheme this is represented with the folder. Notice that it appears blue in the last commit but yellow in the working area, meaning you have modified it since you committed. If you run `git restore <folder>`, it goes back to being blue, i.e. to the state Git had recorded for it. I focus on the folder just for comprehension, but keep in mind that `git restore` only touches the paths you give it: running it on a single file leaves everything else in the working area exactly as it is. How you may feel it is as if you returned to the last commit, undoing every change you made to that file.
+
+- `git restore --staged`: in the scheme this is represented with the excel file. Notice that the excel sits in the staging area with a red cross. This is what you get once you run `git restore --staged <excel>`: the excel, which was staged and ready to be committed, stops being there. Note that the file itself is untouched in your working area. The only thing you undo is the `git add`.
+
+<div align='center'>
+<img src='../images/GitRestore.png' width=1000>
+</div>
+
+>[!NOTE]
+> I hope these graphs clarify the concepts rather than confuse them. I came up with them by myself, so please feel free to provide a better representation.
 
 ### `git reset`: moving the branch pointer
 
