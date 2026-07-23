@@ -211,3 +211,17 @@ Like every command presented so far, `git reset` accepts flags. Here they are no
 | | | | |
 </div>
 
+Read this table as a gradient of how much it touches: `--soft` moves the least, `--hard` moves the most. <span style='color:rgba(210,110,50)'> **For example:** </span> if you have just committed something and realise it should have been two separate commits instead of one, `git reset --soft HEAD~1` undoes the commit while leaving every change perfectly staged, ready for you to split and re-commit it. `git reset --hard HEAD~1`, by contrast, undoes the commit *and* rewinds your working directory to the previous state, so those changes vanish from disk as well. 
+
+The commit itself is not gone, i.e., it still sits in `objects/` and the reflog remembers where `HEAD` was, so `git reset --hard ORIG_HEAD` brings you straight back. What you will never recover is anything that was still uncommitted at that moment, staged or not, since that content never reached the repository in the first place.
+
+To clarify this:
+<div align="center">
+
+| | Branch pointer | Index (staging) | Working dir | Content of your files |
+| --- | --- | --- | --- | --- |
+| `--soft` | Goes to commit `i` | Stays at commit `i+n` | Stays at commit `i+n` | that of `i+n` |
+| `--mixed` | Goes to commit `i` | Goes to commit `i` | Stays at commit `i+n` | that of `i+n` |
+| `--hard` | Goes to commit `i` | Goes to commit `i` | Goes to commit `i` | that of `i` |
+| | | | |
+</div>
