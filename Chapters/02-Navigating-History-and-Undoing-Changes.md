@@ -200,7 +200,6 @@ You created the repository and started making changes and committing them. That'
 > I hope these graphs clarify the concepts rather than confuse them. I came up with
 > them by myself, so please feel free to provide a better representation.
 
-
 Like every command presented so far, `git reset` accepts flags. Here they are not merely cosmetic, since the command takes a target commit and a *mode* that decides which of the three areas are dragged back along with the branch. The branch pointer always moves; what changes is whether the staging area and the working directory are rewritten to match.
 
 <div align="center">
